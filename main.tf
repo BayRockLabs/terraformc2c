@@ -32,13 +32,6 @@ variable "acr_admin_password" {
   type        = string
 }
 
-variable "dns_zone_name" {
-  description = "The DNS zone name"
-  type        = string
-}
-
-
-
 variable "container_apps" {
   description = "List of container apps with their respective image names, tags, and ports"
   type = list(object({
