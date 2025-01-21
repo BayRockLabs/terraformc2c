@@ -4,6 +4,5 @@ terraform {
     storage_account_name  = "tfc2c"
     container_name        = "tfbackend"
     key                   = "tfstate-file"
-    sas_token             = var.sas_token
   }
 }

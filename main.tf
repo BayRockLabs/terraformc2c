@@ -27,11 +27,6 @@ variable "acr_admin_username" {
   description = "The admin username of the Azure Container Registry"
   type        = string
 }
-
-variable "sas_token" {
-  type = string
-}
-
 variable "acr_admin_password" {
   description = "The admin password of the Azure Container Registry"
   type        = string
