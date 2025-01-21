@@ -9,6 +9,10 @@ on:
         options:
           - apply
           - destroy
+      dns_zone_name:
+        description: 'DNS Zone Name'
+        required: true
+        default: 'tfc2cnew.com'
 
 jobs:
   terraform:
@@ -36,12 +40,12 @@ jobs:
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var "dns_zone_name=${{ github.event.inputs.dns_zone_name }}"
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
 
       - name: Terraform Destroy
         if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -var "dns_zone_name=${{ github.event.inputs.dns_zone_name }}"
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
