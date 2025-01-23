@@ -1,4 +1,4 @@
-variable "dns_zone_name" {
+/*variable "dns_zone_name" {
   description = "The name of the DNS zone"
   type        = string
 }
@@ -32,3 +32,4 @@ resource "azurerm_dns_txt_record" "asuid" {
 
   depends_on = [azurerm_dns_zone.main]
 }
+*/
