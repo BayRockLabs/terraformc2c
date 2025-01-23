@@ -27,6 +27,7 @@ variable "acr_admin_username" {
   description = "The admin username of the Azure Container Registry"
   type        = string
 }
+
 variable "acr_admin_password" {
   description = "The admin password of the Azure Container Registry"
   type        = string
@@ -39,6 +40,14 @@ variable "container_apps" {
     image_name  = string
     image_tag   = string
     port        = number
+  }))
+}
+
+variable "env_vars" {
+  description = "List of environment variables"
+  type = list(object({
+    name  = string
+    value = string
   }))
 }
 
@@ -78,6 +87,14 @@ resource "azurerm_container_app" "containerapp" {
     value = var.acr_admin_password
   }
 
+  dynamic "secret" {
+    for_each = var.env_vars
+    content {
+      name  = lower(replace(secret.value.name, "_", "-"))
+      value = secret.value.value
+    }
+  }
+
   registry {
     server               = var.acr_login_server
     username             = var.acr_admin_username
@@ -91,9 +108,12 @@ resource "azurerm_container_app" "containerapp" {
       cpu    = 1
       memory = "2Gi"
 
-      env {
-        name  = "PORT"
-        value = each.value.port
+      dynamic "env" {
+        for_each = var.env_vars
+        content {
+          name        = env.value.name
+          secret_name = lower(replace(env.value.name, "_", "-"))
+        }
       }
     }
   }
