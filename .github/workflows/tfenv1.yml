@@ -1,3 +1,5 @@
+name: Secret with tfvar
+
 on:
   workflow_dispatch:
     inputs:
