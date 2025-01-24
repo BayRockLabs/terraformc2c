@@ -28,6 +28,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.0.0
 
       - name: Create terraform.tfvars
         run: |
@@ -39,6 +41,9 @@ jobs:
         run: terraform init
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
+
+      - name: Force Unlock State (if needed)
+        run: terraform force-unlock 47337fa9-1b5e-af70-63a2-52101d6d2bcc || true
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
