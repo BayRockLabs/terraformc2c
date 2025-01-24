@@ -29,8 +29,6 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.0.0
 
       - name: Create terraform.tfvars
         run: |
@@ -45,18 +43,18 @@ jobs:
 
       - name: Terraform Plan
         if: github.event.inputs.action == 'plan'
-        run: terraform plan -out=tfplan -lock=false
+        run: terraform plan -out=tfplan -var-file=terraform.tfvars -lock=false
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
-        run: terraform apply -auto-approve -lock=false
+        run: terraform apply -auto-approve -var-file=terraform.tfvars -lock=false
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
 
       - name: Terraform Destroy
         if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve -lock=false
+        run: terraform destroy -auto-approve -var-file=terraform.tfvars -lock=false
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
