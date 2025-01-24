@@ -1,4 +1,4 @@
-resource_group_name     = "tfResourceGroup"
+/*resource_group_name     = "tfResourceGroup"
 location                = "East US"
 acr_name                = "c2cacr"
 acr_resource_group_name = "c2c-demo"
@@ -33,3 +33,4 @@ container_apps = [
     port       = 8000
   }
 ]
+*/
