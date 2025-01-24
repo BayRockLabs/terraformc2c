@@ -29,19 +29,27 @@ jobs:
         with:
           terraform_version: 1.0.0
 
-      - name: Terraform Init
-        run: terraform init
+      - name: Create terraform.tfvars file
+        run: echo "${{ secrets.tfvar }}" > terraform.tfvars
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -input=false tfplan
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
+          TF_LOG: DEBUG
 
       - name: Terraform Destroy
         if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -input=false
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
+          TF_LOG: DEBUG
