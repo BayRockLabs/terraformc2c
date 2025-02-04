@@ -6,18 +6,21 @@ acr_login_server        = "c2cacr.azurecr.io"
 acr_admin_username      = "c2cacr"
 acr_admin_password      = "+ZIQpusAzJ7K4N5JrAxb/CQl+qFQXjqElGZhgD1Q/c+ACRDTs9wC"
 dns_zone_name           = "tfc2cnew.com"
+postgresql_server_name                  = "c2c-demo-db"
+postgresql_server_resource_group_name   = "c2c-demo"
+postgresql_database_name                = "newc2ctfdb"
 
 container_apps = [
   {
     name       = "frontend"
     image_name = "c2c-ui"
-    image_tag  = "c4ab117"
+    image_tag  = "d8abcc5"
     port       = 80
   },
   {
     name       = "backend"
     image_name = "c2c-service"
-    image_tag  = "7933e11"
+    image_tag  = "97312c2"
     port       = 8000
   },
   {

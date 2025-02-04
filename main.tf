@@ -27,6 +27,7 @@ variable "acr_admin_username" {
   description = "The admin username of the Azure Container Registry"
   type        = string
 }
+
 variable "acr_admin_password" {
   description = "The admin password of the Azure Container Registry"
   type        = string
@@ -40,6 +41,21 @@ variable "container_apps" {
     image_tag   = string
     port        = number
   }))
+}
+
+variable "postgresql_server_name" {
+  description = "The name of the existing PostgreSQL server"
+  type        = string
+}
+
+variable "postgresql_server_resource_group_name" {
+  description = "The resource group name of the existing PostgreSQL server"
+  type        = string
+}
+
+variable "postgresql_database_name" {
+  description = "The name of the new PostgreSQL database"
+  type        = string
 }
 
 resource "azurerm_resource_group" "main" {
@@ -108,4 +124,20 @@ resource "azurerm_container_app" "containerapp" {
   }
 
   depends_on = [azurerm_container_app_environment.main]
+}
+
+# Using azurerm_postgresql_flexible_server
+# Using azurerm_postgresql_flexible_server_database
+data "azurerm_postgresql_flexible_server" "existing_flexible" {
+  name                = var.postgresql_server_name
+  resource_group_name = var.postgresql_server_resource_group_name
+}
+
+resource "azurerm_postgresql_flexible_server_database" "main" {
+  name                = var.postgresql_database_name
+  server_id           = data.azurerm_postgresql_flexible_server.existing_flexible.id
+  charset             = "UTF8"
+  collation           = "en_US.utf8"
+
+  depends_on = [azurerm_resource_group.main]
 }
