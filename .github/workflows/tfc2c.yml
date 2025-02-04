@@ -1,3 +1,5 @@
+name: Terraaform C2C
+
 on:
   workflow_dispatch:
     inputs:
@@ -33,6 +35,9 @@ jobs:
         with:
           terraform_version: 1.0.0
 
+      - name: Decode terraform.tfvars
+        run: echo "${{ secrets.TFVARS_BASE64 }}" | base64 --decode > terraform.tfvars
+
       - name: Terraform Init
         run: terraform init
         env:
@@ -40,12 +45,12 @@ jobs:
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
-        run: terraform apply -auto-approve -var "dns_zone_name=${{ github.event.inputs.dns_zone_name }}"
+        run: terraform apply -auto-approve -var-file="terraform.tfvars" -var "dns_zone_name=${{ github.event.inputs.dns_zone_name }}"
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
 
       - name: Terraform Destroy
         if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve -var "dns_zone_name=${{ github.event.inputs.dns_zone_name }}"
+        run: terraform destroy -auto-approve -var-file="terraform.tfvars" -var "dns_zone_name=${{ github.event.inputs.dns_zone_name }}"
         env:
           ARM_SAS_TOKEN: ${{ secrets.ARM_SAS_TOKEN }}
